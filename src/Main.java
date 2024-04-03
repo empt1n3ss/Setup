@@ -5,11 +5,15 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Main {
+    private static final StringBuilder log = new StringBuilder();
     public static void main(String[] args) {
-        StringBuilder log = new StringBuilder();
         List<String> directories = Arrays.asList("C:/f/Games", "C:/f/Games/src","C:/f/Games/src/main","C:/f/Games/src/test", "C:/f/Games/res", "C:/f/Games/savegames", "C:/f/Games/temp");
-        createDirectories(directories, log);
-        createFiles(log);
+
+        for (String directoryPath : directories) {
+            createDirectory(directoryPath);
+        }
+        createFiles("C:/f/Games/src/main/Main.java");
+        createFiles("C:/f/Games/src/main/Utils.java");
 
         File tempTxt = new File("C:/f/Games/temp/temp.txt");
         try (FileWriter writer = new FileWriter(tempTxt)) {
@@ -19,24 +23,21 @@ public class Main {
             System.out.println("Ошибка при записи лога" + e.getMessage());
         }
     }
-    public static void createDirectories(List<String> directories, StringBuilder log){
-        for (String directoryPath : directories) {
-            File directory = new File(directoryPath);
+    private static void createDirectory(String directoryPath){
+        File directory = new File(directoryPath);
             if (directory.mkdir()) {
-                log.append("Папка ").append(directoryPath).append(" усешно создана\n");
+                log.append("Папка ").append(directoryPath).append(" успешно создана\n");
             } else {
                 log.append("Ошибка при создании папки").append(directoryPath).append("\n");
             }
         }
-    }
-    private static void createFiles(StringBuilder log) {
+    private static void createFiles(String filePath) {
         try {
-            File mainJavaFile = new File("C:/f/Games/src/main/Main.java");
-            File utilsJavaFile = new File("C:/f/Games/src/main/Utils.java");
-            if (mainJavaFile.createNewFile() && utilsJavaFile.createNewFile()) {
-                log.append("Файлы Main.java и Utils.java созданы успешно\n");
+            File file = new File(filePath);
+            if (file.createNewFile()) {
+                log.append("Файл ").append(file.getName()).append(" создан успешно\n");
             } else {
-                log.append("Ошибка при создании файлов Main.java и Utils.java\n");
+                log.append("Ошибка при создании файла ").append(filePath).append("\n");
             }
         } catch (IOException e) {
             log.append("Ошибка при создании файлов Main.java и Utils.java: ").append(e.getMessage()).append("\n");
